@@ -21,7 +21,6 @@ CREATE TABLE #tableResults
     objectType VARCHAR(100),
     rCount INT,
     searchCriteria VARCHAR(100)
-
 );
 
 IF @tableInclusion = 1
