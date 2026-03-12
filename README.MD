@@ -1,0 +1,3 @@
+# SSMS Snippets
+
+This is AhvQuinn's personal repository of useful SQL snippets and queries. *Utility* houses scripts that can be useful as reference code, as well as resources for identifying database objects. *Administration* holds queries that are helpful for setting up and configuring databases, and *misc* holds any random files that don’t fit cleanly into another subcategory, and are usually just code created for my own amusment.

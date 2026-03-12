@@ -1,6 +1,3 @@
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-SET NOCOUNT ON;
-
 DECLARE @msg VARCHAR(255) = CONCAT(CHAR(47),REPLICATE('*',50),CHAR(10));
 SET @msg = CONCAT(@msg, 'SERVERNAME: ', @@SERVERNAME, CHAR(10));
 SET @msg = CONCAT(@msg, 'DB_NAME: ', REPLICATE(CHAR(32),3), DB_NAME(),CHAR(10));
@@ -8,11 +5,12 @@ SET @msg = CONCAT(@msg, 'USERNAME: ', REPLICATE(CHAR(32),2), SYSTEM_USER,CHAR(10
 SET @msg = CONCAT(@msg, 'START TIME: ', SYSDATETIME(), CHAR(10),REPLICATE('*',50),CHAR(47),CHAR(10))
 PRINT(@msg);
 
-SET NOCOUNT OFF;
-
 PRINT 'BEGINNING TRANSACTION'; BEGIN TRANSACTION;
 
-DECLARE @maxIteration INT = 93;
+/*Set this to determine the maximum number of fibbonacci iterations*/
+DECLARE @maxIteration INT = 10;
+
+/*********************End of User-Configurable Fields*********************/
 
 IF (@maxIteration > 93)
 BEGIN;
@@ -50,6 +48,9 @@ WITH fibbonacciRoot AS
 			fibbonacciRoot.iteration
 		FROM
 			fibbonacciRoot
+		WHERE
+			/*Ensures if a @maxIteration thats less than the inital seed of 3 elements is selected, we won't return more than is asked for.*/
+			fibbonacciRoot.iteration < @maxIteration
 
 		UNION ALL
 
@@ -68,8 +69,6 @@ SELECT
 	recursiveFibbonacci.number
 FROM
 	recursiveFibbonacci
-WHERE
-	1=1
 ORDER BY
 	recursiveFibbonacci.iteration;
 
