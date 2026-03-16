@@ -15,8 +15,9 @@ PRINT 'BEGINNING TRANSACTION'; BEGIN TRANSACTION;
 GO
 EXEC dbo.sp_add_job @job_name = N'DatabaseNightlyBackup';
 GO
-DECLARE @database NVARCHAR(255) = 'QDB';
-DECLARE @backupPath NVARCHAR(255) = 'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\Backup\QDB.bak';
+DECLARE @database NVARCHAR(255) = '{DatabaseNameGoesHere}';
+/*As a general note, it's a good idea to have your backups go to a different drvie than the one the database is located on.*/
+DECLARE @backupPath NVARCHAR(255) = '{BackupPathGoesHere}\{DatabaseNameGoesHere}.bak';
 DECLARE @command NVARCHAR(MAX) = CONCAT('BACKUP DATABASE ', @database, ' TO DISK = ', @backupPath, ';');
 
 EXEC dbo.sp_add_jobstep
@@ -41,7 +42,7 @@ GO
 EXEC dbo.sp_add_alert
 	@name = N'DatabaseNightlyBackupFailure',
 	@message_id = 0,
-	@severity = 0,
+	@severity = 1,
 	@enabled = 1,
 	@delay_between_responses = 0,
 	@include_event_description_in = 1,

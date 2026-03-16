@@ -1,0 +1,35 @@
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SET XACT_ABORT ON;
+
+DECLARE @msg VARCHAR(255) = CONCAT(CHAR(47),REPLICATE('*',50),CHAR(10));
+SET @msg = CONCAT(@msg, 'SERVERNAME: ', @@SERVERNAME, CHAR(10));
+SET @msg = CONCAT(@msg, 'DB_NAME: ', REPLICATE(CHAR(32),3), DB_NAME(),CHAR(10));
+SET @msg = CONCAT(@msg, 'USERNAME: ', REPLICATE(CHAR(32),2), SYSTEM_USER,CHAR(10));
+SET @msg = CONCAT(@msg, 'START TIME: ', SYSDATETIME(), CHAR(10),REPLICATE('*',50),CHAR(47),CHAR(10))
+PRINT(@msg);
+
+--https://learn.microsoft.com/en-us/sql/t-sql/statements/bulk-insert-transact-sql?view=sql-server-ver17
+
+PRINT 'BEGINNING TRANSACTION'; BEGIN TRANSACTION;
+
+CREATE TABLE #BulkInsert
+	(
+		columnData1 INT,
+		columnData2 DATE,
+		columnData3 UNIQUEIDENTIFIER,
+		columnData4 VARCHAR(255),
+		columnData5 CHAR(10),
+	)
+BULK INSERT #BulkInsert
+FROM
+	'{PathToYourDataGoesHere}'
+WITH
+	(
+		DATAFILETYPE = 'char', 
+		FIELDTERMINATOR = '\t', /*Tab-delimited, change as needed.*/
+		ROWTERMINATOR = '\n',
+		FIRSTROW = 1 /*No header*/
+	)
+
+PRINT CONCAT(CHAR(10), 'TRANSACTION IN ROLLBACK'); ROLLBACK TRANSACTION;
+--PRINT CONCAT(CHAR(10), 'TRANSACTION COMMITTED'); COMMIT TRANSACTION;
